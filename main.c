@@ -8,7 +8,7 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/file.h>
-#include <rvmlib.h>
+#include "rvmlib.h"
 
 #define SIZE 10
 
@@ -19,13 +19,13 @@ struct data {
     char name[SIZE];
 };
 
+char *store = "../bstore.txt";
+char *segname = "../log.txt";
+
 void app_init(int bstore) {
     struct stat sb;
     struct data dat;
-    fstat(bstore, &sb);
-    if(sb.st_size < sizeof(struct data)) {
-        fprintf(stdout, "Backing store is empty\n");
-    }
+
     for(int ii = 0; ii < SIZE; ii++) {
         dat.id[ii] = ii;
         dat.name[ii] = 65 + ii;
@@ -38,18 +38,30 @@ int main(int argc, const char *argv[])
     int log, bstore;
     struct data dat, dat2;
     void * addr;
+    rvm_t rvmData;
 
-    if((bstore = open("../bstore.txt", O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)) < 0) {
+    // Verbose log is enabled by cmd args
+    if(argc == 2) {
+        rvm_verbose(1);
+    }
+
+    // Initializing backing store
+    rvmData = rvm_init(store);
+    if(rvmData.first_init) {
+        app_init(rvmData.storefd);
+    }
+
+    // ATTENTION: What is a segname? Why send rvmData when we are sending segname and size explicitly???
+    if((log = open(segname, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)) < 0) {
         fprintf(stdout, "Unable to open the file\n");
     }
 
-    if((log = open("../log.txt", O_CREAT | O_RDWR, S_IRUSR | S_IWUSR)) < 0) {
-        fprintf(stdout, "Unable to open the file\n");
-    }
+    rvmData.logfd = log;
+    rvmData.dataSize = 2*sizeof(struct data);
+    addr = rvm_map(rvmData, log, 2*sizeof(struct data));
 
-    app_init(bstore);
-    close(bstore);
-    close(log);
+
+
 
 
 //    // MMAP-ing
@@ -59,5 +71,6 @@ int main(int argc, const char *argv[])
 //
 //    memcpy(addr, &dat2.name[0], (size_t)5);
 
+    rvm_unmap(rvmData, addr);
     return 0;
 }

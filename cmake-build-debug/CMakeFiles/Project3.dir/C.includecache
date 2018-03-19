@@ -27,8 +27,30 @@ errno.h
 -
 sys/file.h
 -
+rvmlib.h
+/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.h
 
 /home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.c
+stdio.h
+-
+stdlib.h
+-
+sys/types.h
+-
+sys/stat.h
+-
+unistd.h
+-
+fcntl.h
+-
+sys/mman.h
+-
+string.h
+-
+errno.h
+-
+sys/file.h
+-
 rvmlib.h
 /home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.h
 

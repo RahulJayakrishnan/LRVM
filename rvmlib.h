@@ -6,12 +6,12 @@
 #define PROJECT3_RVMLIB_H
 
 typedef struct rvm_t {
-
+    int logfd, storefd, first_init, dataSize;
 } rvm_t;
 
-typedef struct trans_id {
+typedef struct trans_t {
 
-} trans_id;
+} trans_t;
 
 /*
  * Initialization and Mapping
