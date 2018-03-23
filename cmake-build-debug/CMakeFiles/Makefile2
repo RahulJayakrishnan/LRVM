@@ -54,45 +54,45 @@ RM = /home/hrjanardhan/Downloads/clion-2017.3.1/bin/cmake/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/hrjanardhan/Desktop/git_AOS/Project3
+CMAKE_SOURCE_DIR = /home/hrjanardhan/Desktop/git_AOS/Project3_NEW
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug
+CMAKE_BINARY_DIR = /home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug
 
 #=============================================================================
-# Target rules for target CMakeFiles/Project3.dir
+# Target rules for target CMakeFiles/Project3_NEW.dir
 
 # All Build rule for target.
-CMakeFiles/Project3.dir/all:
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/depend
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug/CMakeFiles --progress-num=1,2,3 "Built target Project3"
-.PHONY : CMakeFiles/Project3.dir/all
+CMakeFiles/Project3_NEW.dir/all:
+	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/depend
+	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug/CMakeFiles --progress-num=1,2,3 "Built target Project3_NEW"
+.PHONY : CMakeFiles/Project3_NEW.dir/all
 
 # Include target in all.
-all: CMakeFiles/Project3.dir/all
+all: CMakeFiles/Project3_NEW.dir/all
 
 .PHONY : all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/Project3.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug/CMakeFiles 3
-	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/Project3.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug/CMakeFiles 0
-.PHONY : CMakeFiles/Project3.dir/rule
+CMakeFiles/Project3_NEW.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug/CMakeFiles 3
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/Project3_NEW.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug/CMakeFiles 0
+.PHONY : CMakeFiles/Project3_NEW.dir/rule
 
 # Convenience name for target.
-Project3: CMakeFiles/Project3.dir/rule
+Project3_NEW: CMakeFiles/Project3_NEW.dir/rule
 
-.PHONY : Project3
-
-# clean rule for target.
-CMakeFiles/Project3.dir/clean:
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/clean
-.PHONY : CMakeFiles/Project3.dir/clean
+.PHONY : Project3_NEW
 
 # clean rule for target.
-clean: CMakeFiles/Project3.dir/clean
+CMakeFiles/Project3_NEW.dir/clean:
+	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/clean
+.PHONY : CMakeFiles/Project3_NEW.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/Project3_NEW.dir/clean
 
 .PHONY : clean
 

@@ -4,8 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/home/hrjanardhan/Desktop/git_AOS/Project3/main.c" "/home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug/CMakeFiles/Project3.dir/main.c.o"
-  "/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.c" "/home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug/CMakeFiles/Project3.dir/rvmlib.c.o"
+  "/home/hrjanardhan/Desktop/git_AOS/Project3_NEW/main.c" "/home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug/CMakeFiles/Project3_NEW.dir/main.c.o"
+  "/home/hrjanardhan/Desktop/git_AOS/Project3_NEW/rvmlib.c" "/home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug/CMakeFiles/Project3_NEW.dir/rvmlib.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

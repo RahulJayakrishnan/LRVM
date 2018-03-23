@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/hrjanardhan/Desktop/git_AOS/Project3/main.c
+/home/hrjanardhan/Desktop/git_AOS/Project3_NEW/main.c
 stdio.h
 -
 stdlib.h
@@ -28,9 +28,9 @@ errno.h
 sys/file.h
 -
 rvmlib.h
-/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.h
+/home/hrjanardhan/Desktop/git_AOS/Project3_NEW/rvmlib.h
 
-/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.c
+/home/hrjanardhan/Desktop/git_AOS/Project3_NEW/rvmlib.c
 stdio.h
 -
 stdlib.h
@@ -52,7 +52,7 @@ errno.h
 sys/file.h
 -
 rvmlib.h
-/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.h
+/home/hrjanardhan/Desktop/git_AOS/Project3_NEW/rvmlib.h
 
-/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.h
+/home/hrjanardhan/Desktop/git_AOS/Project3_NEW/rvmlib.h
 

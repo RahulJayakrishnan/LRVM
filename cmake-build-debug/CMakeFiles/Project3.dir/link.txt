@@ -1,1 +1,0 @@
-/usr/bin/cc -g   CMakeFiles/Project3.dir/main.c.o CMakeFiles/Project3.dir/rvmlib.c.o  -o Project3 

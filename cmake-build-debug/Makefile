@@ -48,10 +48,10 @@ RM = /home/hrjanardhan/Downloads/clion-2017.3.1/bin/cmake/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/hrjanardhan/Desktop/git_AOS/Project3
+CMAKE_SOURCE_DIR = /home/hrjanardhan/Desktop/git_AOS/Project3_NEW
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug
+CMAKE_BINARY_DIR = /home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug/CMakeFiles /home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug/CMakeFiles /home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Project3
+# Target rules for targets named Project3_NEW
 
 # Build rule for target.
-Project3: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Project3
-.PHONY : Project3
+Project3_NEW: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Project3_NEW
+.PHONY : Project3_NEW
 
 # fast build rule for target.
-Project3/fast:
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/build
-.PHONY : Project3/fast
+Project3_NEW/fast:
+	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/build
+.PHONY : Project3_NEW/fast
 
 main.o: main.c.o
 
@@ -129,7 +129,7 @@ main.o: main.c.o
 
 # target to build an object file
 main.c.o:
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/main.c.o
+	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/main.c.o
 .PHONY : main.c.o
 
 main.i: main.c.i
@@ -138,7 +138,7 @@ main.i: main.c.i
 
 # target to preprocess a source file
 main.c.i:
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/main.c.i
+	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/main.c.i
 .PHONY : main.c.i
 
 main.s: main.c.s
@@ -147,7 +147,7 @@ main.s: main.c.s
 
 # target to generate assembly for a file
 main.c.s:
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/main.c.s
+	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/main.c.s
 .PHONY : main.c.s
 
 rvmlib.o: rvmlib.c.o
@@ -156,7 +156,7 @@ rvmlib.o: rvmlib.c.o
 
 # target to build an object file
 rvmlib.c.o:
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/rvmlib.c.o
+	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/rvmlib.c.o
 .PHONY : rvmlib.c.o
 
 rvmlib.i: rvmlib.c.i
@@ -165,7 +165,7 @@ rvmlib.i: rvmlib.c.i
 
 # target to preprocess a source file
 rvmlib.c.i:
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/rvmlib.c.i
+	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/rvmlib.c.i
 .PHONY : rvmlib.c.i
 
 rvmlib.s: rvmlib.c.s
@@ -174,7 +174,7 @@ rvmlib.s: rvmlib.c.s
 
 # target to generate assembly for a file
 rvmlib.c.s:
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/rvmlib.c.s
+	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/rvmlib.c.s
 .PHONY : rvmlib.c.s
 
 # Help Target
@@ -185,7 +185,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... Project3"
+	@echo "... Project3_NEW"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
