@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.9)
-project(Project3_NEW C)
+project(Project3CPP)
 
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Project3_NEW main.c rvmlib.c rvmlib.h)
+add_executable(Project3CPP main.cpp rvmlib.cpp rvmlib.h)

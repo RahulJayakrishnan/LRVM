@@ -1,4 +1,11 @@
 //
+// Created by hrjanardhan on 3/24/18.
+//
+
+#ifndef PROJECT3CPP_RVMLIB_H
+#define PROJECT3CPP_RVMLIB_H
+
+//
 // Created by hrjanardhan on 3/22/18.
 //
 
@@ -7,6 +14,13 @@
 typedef struct rvm_t {
     const char *directory;
 } rvm_t;
+
+typedef struct local_store {
+    int tid;
+    void *segdata;
+    int segsize;
+    char *segname;
+} in_mem;
 
 /*
  * Initialization and Mapping
@@ -34,3 +48,6 @@ void rvm_verbose(int enable_fag);
 
 
 #endif //PROJECT3_RVMLIB_H
+
+
+#endif //PROJECT3CPP_RVMLIB_H

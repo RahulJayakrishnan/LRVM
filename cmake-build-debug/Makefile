@@ -48,10 +48,10 @@ RM = /home/hrjanardhan/Downloads/clion-2017.3.1/bin/cmake/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/hrjanardhan/Desktop/git_AOS/Project3_NEW
+CMAKE_SOURCE_DIR = /home/hrjanardhan/CLionProjects/Project3CPP
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug
+CMAKE_BINARY_DIR = /home/hrjanardhan/CLionProjects/Project3CPP/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug/CMakeFiles /home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/CLionProjects/Project3CPP/cmake-build-debug/CMakeFiles /home/hrjanardhan/CLionProjects/Project3CPP/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/Desktop/git_AOS/Project3_NEW/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/CLionProjects/Project3CPP/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,71 +111,71 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Project3_NEW
+# Target rules for targets named Project3CPP
 
 # Build rule for target.
-Project3_NEW: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Project3_NEW
-.PHONY : Project3_NEW
+Project3CPP: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Project3CPP
+.PHONY : Project3CPP
 
 # fast build rule for target.
-Project3_NEW/fast:
-	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/build
-.PHONY : Project3_NEW/fast
+Project3CPP/fast:
+	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/build
+.PHONY : Project3CPP/fast
 
-main.o: main.c.o
+main.o: main.cpp.o
 
 .PHONY : main.o
 
 # target to build an object file
-main.c.o:
-	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/main.c.o
-.PHONY : main.c.o
+main.cpp.o:
+	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/main.cpp.o
+.PHONY : main.cpp.o
 
-main.i: main.c.i
+main.i: main.cpp.i
 
 .PHONY : main.i
 
 # target to preprocess a source file
-main.c.i:
-	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/main.c.i
-.PHONY : main.c.i
+main.cpp.i:
+	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/main.cpp.i
+.PHONY : main.cpp.i
 
-main.s: main.c.s
+main.s: main.cpp.s
 
 .PHONY : main.s
 
 # target to generate assembly for a file
-main.c.s:
-	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/main.c.s
-.PHONY : main.c.s
+main.cpp.s:
+	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/main.cpp.s
+.PHONY : main.cpp.s
 
-rvmlib.o: rvmlib.c.o
+rvmlib.o: rvmlib.cpp.o
 
 .PHONY : rvmlib.o
 
 # target to build an object file
-rvmlib.c.o:
-	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/rvmlib.c.o
-.PHONY : rvmlib.c.o
+rvmlib.cpp.o:
+	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/rvmlib.cpp.o
+.PHONY : rvmlib.cpp.o
 
-rvmlib.i: rvmlib.c.i
+rvmlib.i: rvmlib.cpp.i
 
 .PHONY : rvmlib.i
 
 # target to preprocess a source file
-rvmlib.c.i:
-	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/rvmlib.c.i
-.PHONY : rvmlib.c.i
+rvmlib.cpp.i:
+	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/rvmlib.cpp.i
+.PHONY : rvmlib.cpp.i
 
-rvmlib.s: rvmlib.c.s
+rvmlib.s: rvmlib.cpp.s
 
 .PHONY : rvmlib.s
 
 # target to generate assembly for a file
-rvmlib.c.s:
-	$(MAKE) -f CMakeFiles/Project3_NEW.dir/build.make CMakeFiles/Project3_NEW.dir/rvmlib.c.s
-.PHONY : rvmlib.c.s
+rvmlib.cpp.s:
+	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/rvmlib.cpp.s
+.PHONY : rvmlib.cpp.s
 
 # Help Target
 help:
@@ -185,7 +185,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... Project3_NEW"
+	@echo "... Project3CPP"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
