@@ -19,6 +19,7 @@ typedef struct student {
     char name[40];
 } student;
 
+int txn_id;
 
 char *store = "backing_store";
 rvm_t rvm;
@@ -38,31 +39,12 @@ int main() {
         rvm_unmap(rvm, addr);
     }
 
+    txn_id = rvm_begin_trans(rvm, 1, (void **)&addr);
+    rvm_about_to_modify(txn_id, addr, 0, sizeof(student));
+
+
 //    rvm_destroy(rvm, "studentid");
 
-    /* To make seg section */
-//    addr = (student *)rvm_map(rvm, "studentid", sizeof(student));
-//    if(addr == NULL) {
-//        printf("rvm_map failed\n");
-//    }
-//    else {
-//        printf("ID: %d\nName: %s\n", addr->id, addr->name);
-//    }
-
-
-//    addr = (student *)rvm_map(rvm, "studentid", sizeof(student));
-
-
-//    addr = (student *)rvm_map(rvm, "studentid", sizeof(student));
-//    student *addr;
-//    int datafd;
-//    student r = {123, "Rick and Morty!"};
-//    datafd = open("backing_store/datastudentid", O_CREAT | O_RDWR, S_IRWXU);
-//    write(datafd, &r, sizeof(student));
-//
-//
-//    addr = (student *)rvm_map(rvm, "studentid", sizeof(student));
-//    printf("ID: %d\nName: %s\n", addr->id, addr->name);
 
 
     return 0;

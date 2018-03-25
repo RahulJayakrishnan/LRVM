@@ -20,7 +20,8 @@
 
 using namespace std;
 int verbose;
-vector <in_mem> localstore;
+vector <in_mem> localstore, undo;
+trans_t tid = -1;
 
 rvm_t rvm_init(const char *directory) {
     rvm_t myData;
@@ -90,6 +91,7 @@ void *rvm_map(rvm_t rvm, const char *segname, int size_to_create) {
     }
     else {
         printf("Mapping doesn't exist\n");
+        truncate(d_filepath, size_to_create);
     }
 
     // Read the logfile's size -> if it's non zero, truncate(make it consistent and clear logs) and then proceed
@@ -114,6 +116,7 @@ void *rvm_map(rvm_t rvm, const char *segname, int size_to_create) {
     }
     else {
         printf("Trying to read more data than filesize\n");
+
     }
 
     return NULL;
@@ -157,4 +160,73 @@ void rvm_destroy(rvm_t rvm, const char *segname) {
         remove(d_filepath);
         printf("Segment name %s and its backing store destroyed successfully\n", segname);
     }
+}
+
+trans_t rvm_begin_trans(rvm_t rvm, int numsegs, void **segbases) {
+    int counter = 0;
+    for(int i = 0; i < numsegs; ++i) {
+        vector <in_mem>::iterator iter;
+        for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
+            if(iter->segdata == segbases[i]) {
+                if(iter->being_modified) {
+                    printf("rvm_begin_trans failed. One or more segments are being modified\n");
+                    return -1;
+                }
+                ++counter;
+            }
+        }
+    }
+    if(counter != numsegs) {
+        printf("rvm_begin_trans failed. One or more segments not mapped\n");
+        return -1;
+    } else {
+        for(int i = 0; i < numsegs; ++i) {
+            vector <in_mem>::iterator iter;
+            for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
+                if(iter->tid == tid) {
+                    ++iter->tid;
+                    printf("TID : %d\n", iter->tid);
+                }
+            }
+        }
+        ++tid;
+        printf("TID : %d\n", tid);
+        return tid;
+    }
+}
+
+void rvm_about_to_modify(trans_t t_id, void *segbase, int offset, int size) {
+    if(t_id < 0) {
+        printf("rvm_about_to_modify failed. Invalid tid\n");
+        return;
+    }
+    vector <in_mem>::iterator iter;
+    for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
+        if(iter->segdata == segbase) {
+            if(iter->being_modified || iter->tid != t_id) {
+                return;
+            }
+            else {
+                iter->being_modified = true;
+                iter->offset = offset;
+                iter->mod_size = size;
+                in_mem temp;
+                temp.tid = t_id;
+                temp.being_modified = false;
+                temp.segname = iter->segname;
+                temp.segsize = iter->segsize;
+                temp.segdata = malloc(temp.segsize);
+                temp.mod_size = iter->mod_size;
+                temp.offset = iter->offset;
+                memcpy(temp.segdata, iter->segdata, temp.segsize);
+                undo.push_back(temp);
+                break;
+            }
+        }
+    }
+
+}
+
+void rvm_commit_trans(trans_t tid) {
+
 }

@@ -20,7 +20,12 @@ typedef struct local_store {
     void *segdata;
     int segsize;
     const char *segname;
+    bool being_modified;
+    int offset;
+    int mod_size;
 } in_mem;
+
+typedef int trans_t;
 
 /*
  * Initialization and Mapping
@@ -33,9 +38,9 @@ void rvm_destroy(rvm_t rvm, const char *segname);
 ///*
 // * Transactional Operations
 // */
-//trans_t rvm_begin_trans(rvm_t rvm, int numsegs, void **segbases);
-//void rvm_about_to_modify(trans_t tid, void *segbase, int ofset, int size);
-//void rvm_commit_trans(trans_t tid);
+trans_t rvm_begin_trans(rvm_t rvm, int numsegs, void **segbases);
+void rvm_about_to_modify(trans_t t_id, void *segbase, int offset, int size);
+void rvm_commit_trans(trans_t tid);
 //void rvm_abort_trans(trans_t tid);
 //
 //
