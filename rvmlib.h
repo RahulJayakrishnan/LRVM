@@ -19,7 +19,7 @@ typedef struct local_store {
     int tid;
     void *segdata;
     int segsize;
-    char *segname;
+    const char *segname;
 } in_mem;
 
 /*

@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/hrjanardhan/CLionProjects/Project3CPP/main.cpp
+/home/hrjanardhan/Desktop/git_AOS/Project3/main.cpp
 stdio.h
 -
 stdlib.h
@@ -28,11 +28,11 @@ errno.h
 sys/file.h
 -
 rvmlib.h
-/home/hrjanardhan/CLionProjects/Project3CPP/rvmlib.h
+/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.h
 iostream
 -
 
-/home/hrjanardhan/CLionProjects/Project3CPP/rvmlib.cpp
+/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.cpp
 stdlib.h
 -
 stdio.h
@@ -54,7 +54,7 @@ errno.h
 sys/file.h
 -
 rvmlib.h
-/home/hrjanardhan/CLionProjects/Project3CPP/rvmlib.h
+/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.h
 string.h
 -
 string
@@ -66,5 +66,5 @@ vector
 iterator
 -
 
-/home/hrjanardhan/CLionProjects/Project3CPP/rvmlib.h
+/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.h
 

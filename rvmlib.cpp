@@ -45,6 +45,7 @@ void rvm_verbose(int enable_fag) {
 }
 
 void *rvm_map(rvm_t rvm, const char *segname, int size_to_create) {
+
     void * addr;
     struct stat buf;
     int logfd, datafd;
@@ -64,11 +65,11 @@ void *rvm_map(rvm_t rvm, const char *segname, int size_to_create) {
     strcat(d_filepath, d_dest);
 
     if(stat(l_filepath, &buf) == 0) {
-        printf("%s exists\n", l_filepath);
+        printf("Log %s exists\n", l_filepath);
     }
     else {
-        printf("%s doesn't exist\n", l_filepath);
-        // Create the file with the specified siez
+        printf("Log %s doesn't exist\n", l_filepath);
+        // Create the file with the specified size
         printf("File created\n");
         // TRUNCATE REQD?
     }
@@ -91,25 +92,69 @@ void *rvm_map(rvm_t rvm, const char *segname, int size_to_create) {
         printf("Mapping doesn't exist\n");
     }
 
+    // Read the logfile's size -> if it's non zero, truncate(make it consistent and clear logs) and then proceed
+    fstat(logfd, &buf);
+    if(!buf.st_size) {
+//        rvm_truncate_log(rvm);
+        // Find the segnames
+    }
+
     if((addr = mmap(NULL, size_to_create, PROT_READ | PROT_WRITE, MAP_SHARED, datafd, 0)) < 0) {
         fprintf(stdout, "Unable to map virtual memory to disk");
     }
 
+    in_mem disk_read = {-1, NULL, size_to_create, segname};
+    fstat(datafd, &buf);
+    if(buf.st_size >= size_to_create) {
+        disk_read.segdata = malloc(size_to_create);
+        memcpy(disk_read.segdata, addr, size_to_create);
+        localstore.push_back(disk_read);
+        printf("Unmap status: %d\n", munmap(addr, size_to_create));
+        return disk_read.segdata;
+    }
+    else {
+        printf("Trying to read more data than filesize\n");
+    }
 
-    in_mem temp = {2, NULL, 23, "studentid"};
-    localstore.push_back(temp);
-//
-//    if((addr = mmap(NULL, size_to_create, PROT_READ | PROT_WRITE, MAP_SHARED, rvm.logfd, 0)) < 0) {
-//        fprintf(stdout, "Unable to map virtual memory to disk");
-//    }
-//    printf("ERRNO: %d\n", errno);
-//    if(verbose) {
-//        fprintf(stdout, "%p | Mapped memory segment at for %d bytes\n", addr, size_to_create);
-//    }
-
-    return addr;
+    return NULL;
 }
-//
-//void rvm_unmap(rvm_t rvm, void *segbase) {
-//
-//}
+
+void rvm_unmap(rvm_t rvm, void *segbase) {
+    vector <in_mem>::iterator iter;
+    printf("Begin: %p End: %p\n", localstore.begin(), localstore.end());
+    for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
+        if(segbase == iter->segdata) {
+            printf("Unmapped: %p\n", segbase);
+            localstore.erase(iter);
+            break;
+        }
+    }
+
+}
+
+void rvm_destroy(rvm_t rvm, const char *segname) {
+    char l_filepath[40], d_filepath[40];
+    char l_dest[40] = "/log", d_dest[40] = "/data";
+
+    strncpy(l_filepath, rvm.directory, 40);
+    strncpy(d_filepath, rvm.directory, 40);
+    strcat(l_dest, segname);
+    strcat(d_dest, segname);
+    strcat(l_filepath, l_dest);
+    strcat(d_filepath, d_dest);
+
+    vector <in_mem>::iterator it;
+    if(localstore.size()) {
+        for(it = localstore.begin(); it <= localstore.end(); it++) {
+            if(!strcmp(it->segname, segname)) {
+                printf("Cannot destroy a mapped segment\n");
+                return;
+            }
+        }
+    }
+    else {
+        remove(l_filepath);
+        remove(d_filepath);
+        printf("Segment name %s and its backing store destroyed successfully\n", segname);
+    }
+}

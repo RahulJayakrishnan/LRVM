@@ -48,10 +48,10 @@ RM = /home/hrjanardhan/Downloads/clion-2017.3.1/bin/cmake/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/hrjanardhan/CLionProjects/Project3CPP
+CMAKE_SOURCE_DIR = /home/hrjanardhan/Desktop/git_AOS/Project3
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/hrjanardhan/CLionProjects/Project3CPP/cmake-build-debug
+CMAKE_BINARY_DIR = /home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/CLionProjects/Project3CPP/cmake-build-debug/CMakeFiles /home/hrjanardhan/CLionProjects/Project3CPP/cmake-build-debug/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug/CMakeFiles /home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/CLionProjects/Project3CPP/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hrjanardhan/Desktop/git_AOS/Project3/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,17 +111,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Project3CPP
+# Target rules for targets named Project3
 
 # Build rule for target.
-Project3CPP: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 Project3CPP
-.PHONY : Project3CPP
+Project3: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 Project3
+.PHONY : Project3
 
 # fast build rule for target.
-Project3CPP/fast:
-	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/build
-.PHONY : Project3CPP/fast
+Project3/fast:
+	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/build
+.PHONY : Project3/fast
 
 main.o: main.cpp.o
 
@@ -129,7 +129,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/main.cpp.o
+	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -138,7 +138,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/main.cpp.i
+	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -147,7 +147,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/main.cpp.s
+	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 rvmlib.o: rvmlib.cpp.o
@@ -156,7 +156,7 @@ rvmlib.o: rvmlib.cpp.o
 
 # target to build an object file
 rvmlib.cpp.o:
-	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/rvmlib.cpp.o
+	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/rvmlib.cpp.o
 .PHONY : rvmlib.cpp.o
 
 rvmlib.i: rvmlib.cpp.i
@@ -165,7 +165,7 @@ rvmlib.i: rvmlib.cpp.i
 
 # target to preprocess a source file
 rvmlib.cpp.i:
-	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/rvmlib.cpp.i
+	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/rvmlib.cpp.i
 .PHONY : rvmlib.cpp.i
 
 rvmlib.s: rvmlib.cpp.s
@@ -174,7 +174,7 @@ rvmlib.s: rvmlib.cpp.s
 
 # target to generate assembly for a file
 rvmlib.cpp.s:
-	$(MAKE) -f CMakeFiles/Project3CPP.dir/build.make CMakeFiles/Project3CPP.dir/rvmlib.cpp.s
+	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/rvmlib.cpp.s
 .PHONY : rvmlib.cpp.s
 
 # Help Target
@@ -185,7 +185,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... Project3CPP"
+	@echo "... Project3"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
