@@ -110,6 +110,8 @@ void *rvm_map(rvm_t rvm, const char *segname, int size_to_create) {
     if(buf.st_size >= size_to_create) {
         disk_read.segdata = malloc(size_to_create);
         memcpy(disk_read.segdata, addr, size_to_create);
+        strncpy(disk_read.l_filepath, l_filepath, 40);
+        strncpy(disk_read.d_filepath, d_filepath, 40);
         localstore.push_back(disk_read);
         printf("Unmap status: %d\n", munmap(addr, size_to_create));
         return disk_read.segdata;
@@ -228,5 +230,26 @@ void rvm_about_to_modify(trans_t t_id, void *segbase, int offset, int size) {
 }
 
 void rvm_commit_trans(trans_t tid) {
+    if(tid < 0) {
+        printf("rvm_commit_trans failed. Invalid tid");
+        return;
+    }
+    log_data ldata;
+    vector <in_mem>::iterator iter;
+    for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
+        if(iter->tid == tid) {
+            ldata.tid = tid;
+            strcpy(ldata.d_filepath, iter->d_filepath);
+            ldata.mod_size = iter->mod_size;
+            ldata.offset = iter->offset;
 
+            // open, mmap, append, seek, close
+            int fd = open(iter->l_filepath, O_CREAT | O_RDWR, S_IRWXU);
+            printf("BEGIN: %d\n", fd);
+            lseek(fd, 0, SEEK_END);
+            write(fd, &ldata, sizeof(ldata));
+            lseek(fd, 0, SEEK_END);
+            write(fd, iter->segdata + iter->offset, iter->mod_size);
+        }
+    }
 }

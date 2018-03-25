@@ -23,7 +23,18 @@ typedef struct local_store {
     bool being_modified;
     int offset;
     int mod_size;
+    char l_filepath[40];
+    char d_filepath[40];
 } in_mem;
+
+typedef struct log_data {
+    int tid;
+    int valid;
+    int can_truncate;
+    int offset;
+    int mod_size;
+    char d_filepath[40];
+} log_data;
 
 typedef int trans_t;
 
