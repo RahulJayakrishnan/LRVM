@@ -29,7 +29,6 @@ typedef struct local_store {
 
 typedef struct log_data {
     int tid;
-    int valid;
     int can_truncate;
     int offset;
     int mod_size;
@@ -37,6 +36,7 @@ typedef struct log_data {
 } log_data;
 
 typedef int trans_t;
+typedef char valid_byte;
 
 /*
  * Initialization and Mapping
@@ -52,13 +52,13 @@ void rvm_destroy(rvm_t rvm, const char *segname);
 trans_t rvm_begin_trans(rvm_t rvm, int numsegs, void **segbases);
 void rvm_about_to_modify(trans_t t_id, void *segbase, int offset, int size);
 void rvm_commit_trans(trans_t tid);
-//void rvm_abort_trans(trans_t tid);
+void rvm_abort_trans(trans_t tid);
 //
 //
 ///*
 // * Log Control Ops
 // */
-//void rvm_truncate_log(rvm_t rvm);
+void rvm_truncate_log(rvm_t rvm);
 void rvm_verbose(int enable_fag);
 
 

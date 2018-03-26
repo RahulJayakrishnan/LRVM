@@ -17,6 +17,8 @@
 #include <iosfwd>
 #include <vector>
 #include <iterator>
+#include <dirent.h>
+#include <iostream>
 
 using namespace std;
 int verbose;
@@ -28,21 +30,27 @@ rvm_t rvm_init(const char *directory) {
     struct stat buf;
 
     if(stat(directory, &buf) == 0) {
-        printf("Directory exists\n");
+        if(verbose)
+            printf("rvm_init - Directory %s exists\n", directory);
     }
 
     else {
-        printf("Directory does not exist\n");
         mkdir(directory, S_IRWXU);
-        printf("Directory Created\n");
+        if(verbose) {
+            printf("Directory does not exist\n");
+            printf("Directory Created\n");
+        }
     }
     myData.directory = directory;
     return myData;
 }
 
 void rvm_verbose(int enable_fag) {
-    verbose = 1;
-    fprintf(stdout, "Verbose Enabled\n");
+    verbose = enable_fag;
+    if(enable_fag)
+        fprintf(stdout, "Verbose Enabled\n");
+    else
+        fprintf(stdout, "Verbose Disabled\n");
 }
 
 void *rvm_map(rvm_t rvm, const char *segname, int size_to_create) {
@@ -66,25 +74,28 @@ void *rvm_map(rvm_t rvm, const char *segname, int size_to_create) {
     strcat(d_filepath, d_dest);
 
     if(stat(l_filepath, &buf) == 0) {
-        printf("Log %s exists\n", l_filepath);
+        if(verbose) {
+            printf("rvm_map - Log %s exists\n", l_filepath);
+        }
     }
     else {
-        printf("Log %s doesn't exist\n", l_filepath);
-        // Create the file with the specified size
-        printf("File created\n");
-        // TRUNCATE REQD?
+        if(verbose) {
+            printf("rvm_map - Log %s doesn't exist\n", l_filepath);
+            // Create the file with the specified size
+            printf("rvm_map - File created\n");
+            // TRUNCATE REQD?
+        }
     }
 
     logfd = open(l_filepath, O_CREAT | O_RDWR, S_IRWXU);
     datafd = open(d_filepath, O_CREAT | O_RDWR, S_IRWXU);
-    printf("DFILE: %s\n", d_filepath);
-
 
     vector <in_mem>::iterator it;
     if(localstore.size()) {
         for(it = localstore.begin(); it != localstore.end(); it++) {
             if(!strcmp(it->segname, segname)) {
-                printf("Segment already mapped\n");
+                if(verbose)
+                    printf("rvm_map - Segment already mapped\n");
                 return NULL;
             }
         }
@@ -129,7 +140,9 @@ void rvm_unmap(rvm_t rvm, void *segbase) {
     printf("Begin: %p End: %p\n", localstore.begin(), localstore.end());
     for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
         if(segbase == iter->segdata) {
-            printf("Unmapped: %p\n", segbase);
+            if(verbose) {
+            printf("rvm_unmap - Unmapped: %p\n", segbase);
+            }
             localstore.erase(iter);
             break;
         }
@@ -238,6 +251,7 @@ void rvm_commit_trans(trans_t tid) {
     vector <in_mem>::iterator iter;
     for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
         if(iter->tid == tid) {
+            iter->being_modified = false;
             ldata.tid = tid;
             strcpy(ldata.d_filepath, iter->d_filepath);
             ldata.mod_size = iter->mod_size;
@@ -250,6 +264,117 @@ void rvm_commit_trans(trans_t tid) {
             write(fd, &ldata, sizeof(ldata));
             lseek(fd, 0, SEEK_END);
             write(fd, iter->segdata + iter->offset, iter->mod_size);
+            lseek(fd, 0, SEEK_END);
+            valid_byte valid = '1';
+            write(fd, &valid, 1);
         }
     }
+}
+
+void rvm_abort_trans(trans_t tid) {
+    if(tid < 0) {
+        printf("rvm_abort_trans failed. Invalid tid\n");
+        return;
+    }
+    vector <in_mem>::iterator iter;
+    for(iter = localstore.begin(); iter < localstore.end(); iter++) {
+        if(iter->tid == tid) {
+            localstore.erase(iter);
+        }
+    }
+
+    for(iter = undo.begin(); iter <= undo.end(); iter++) {
+        if(iter->tid == tid) {
+            localstore.push_back(*iter);
+            undo.erase(iter);
+            // Memleak might be there if about_to_modify is called multiple times for the same segment
+        }
+    }
+    if(verbose) {
+    printf("rvm_abort_trans - Aborted transaction\n");
+    }
+}
+
+void rvm_truncate_log(rvm_t rvm) {
+    struct dirent *dir;
+    DIR *dr = opendir(rvm.directory);
+    if(dr == NULL) {
+        printf("Directory doesn't exist\n");
+        return;
+    }
+
+    char l_filepath[40], d_filepath[40];
+    char l_dest[40] = "/log";
+    char d_dest[40] = "/data";
+
+    strncpy(l_filepath, rvm.directory, 40);
+    strncpy(d_filepath, rvm.directory, 40);
+
+    while((dir = readdir(dr)) != NULL) {
+        string dir_name = dir->d_name;
+        string log_str = "log";
+        string str_segname;
+        struct stat logbuf, databuf;
+        if(dir_name.find(log_str, 0) != std::string::npos) {
+            cout<<dir_name<<endl;
+            str_segname = dir_name.substr(3);
+            cout<<str_segname<<endl;
+            const char *segname = str_segname.c_str();
+            strcat(l_dest, segname);
+            strcat(d_dest, segname);
+            strcat(l_filepath, l_dest);
+            strcat(d_filepath, d_dest);
+            printf("l_filepath: %s\n", l_filepath);
+            printf("d_filepath: %s\n", d_filepath);
+
+            int logfd = open(l_filepath, O_RDWR, S_IRWXU);
+            int datafd = open(d_filepath, O_RDWR, S_IRWXU);
+
+            fstat(logfd, &logbuf);
+            fstat(datafd, &logbuf);
+
+            if(logbuf.st_size) {
+                printf("rvm_truncate_log - Truncating log %s\n", l_filepath);
+                log_data temp;
+                void *logaddr, *dataddr;
+
+                if((logaddr = mmap(NULL, logbuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, logfd, 0)) < 0) {
+                    fprintf(stdout, "Unable to map virtual memory to disk");
+                }
+
+                if((dataddr = mmap(NULL, databuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, datafd, 0)) < 0) {
+                    fprintf(stdout, "Unable to map virtual memory to disk");
+                }
+
+                memcpy(&temp, logaddr, sizeof(log_data));
+                void *runner = logaddr, *payload;
+                printf("Runner start: %p logaddr start: %p temp addr: %p\n", runner, logaddr, &temp);
+                runner += sizeof(log_data);
+                printf("Runner end: %p\n", runner);
+                printf("Logs data size: %d\n", sizeof(log_data));
+                payload = (char *)malloc(temp.mod_size);
+                memcpy(payload, runner, temp.mod_size);
+                lseek(datafd, temp.offset, SEEK_SET);
+                write(datafd, payload, temp.mod_size);
+
+
+                //TESTING
+                int newfd = open("newfile", O_CREAT | O_RDWR, S_IRWXU);
+                void *newaddr;
+
+                if((newaddr = mmap(NULL, logbuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, newfd, 0)) < 0) {
+                        fprintf(stdout, "Unable to map virtual memory to disk");
+                }
+                printf("TEMP MODSIZE: %d\n", temp.mod_size);
+                write(newfd, payload, temp.mod_size);
+                //TESTING
+
+            }
+
+
+            printf("LOG EXISTS\n");
+        }
+    }
+    closedir(dr);
+
 }
