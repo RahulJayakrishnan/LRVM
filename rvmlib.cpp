@@ -256,6 +256,7 @@ void rvm_commit_trans(trans_t tid) {
             strcpy(ldata.d_filepath, iter->d_filepath);
             ldata.mod_size = iter->mod_size;
             ldata.offset = iter->offset;
+            ldata.flag = '\n';
 
             // open, mmap, append, seek, close
             int fd = open(iter->l_filepath, O_CREAT | O_RDWR, S_IRWXU);
@@ -303,12 +304,13 @@ void rvm_truncate_log(rvm_t rvm) {
         return;
     }
 
-    char l_filepath[40], d_filepath[40];
+    char l_filepath[40], d_filepath[40], p_filepath[40];
     char l_dest[40] = "/log";
     char d_dest[40] = "/data";
 
     strncpy(l_filepath, rvm.directory, 40);
     strncpy(d_filepath, rvm.directory, 40);
+    strncpy(p_filepath, rvm.directory, 40);
 
     while((dir = readdir(dr)) != NULL) {
         string dir_name = dir->d_name;
@@ -324,50 +326,120 @@ void rvm_truncate_log(rvm_t rvm) {
             strcat(d_dest, segname);
             strcat(l_filepath, l_dest);
             strcat(d_filepath, d_dest);
+            strcat(p_filepath, "/ghost");
             printf("l_filepath: %s\n", l_filepath);
             printf("d_filepath: %s\n", d_filepath);
+            printf("p_filepath: %s\n", p_filepath);
 
-            int logfd = open(l_filepath, O_RDWR, S_IRWXU);
-            int datafd = open(d_filepath, O_RDWR, S_IRWXU);
+            int logfd = open(l_filepath, O_RDWR, S_IRWXU), count = 0, skip_size = 0;
+            int datafd = open(d_filepath, O_RDWR, S_IRWXU), ghost_fd;
 
             fstat(logfd, &logbuf);
-            fstat(datafd, &logbuf);
+            fstat(datafd, &databuf);
 
             if(logbuf.st_size) {
                 printf("rvm_truncate_log - Truncating log %s\n", l_filepath);
                 log_data temp;
-                void *logaddr, *dataddr;
+                void *logaddr, *dataddr, *logend, *runner, *payload, *valid_ptr, *temp_store, *ghost_addr;
 
                 if((logaddr = mmap(NULL, logbuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, logfd, 0)) < 0) {
                     fprintf(stdout, "Unable to map virtual memory to disk");
                 }
 
+                logend = logaddr + logbuf.st_size;
+
                 if((dataddr = mmap(NULL, databuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, datafd, 0)) < 0) {
                     fprintf(stdout, "Unable to map virtual memory to disk");
                 }
 
+
+                printf("Size of file: %d\n", logbuf.st_size);
+                void *start_addr = logaddr;
+                while(logbuf.st_size && logaddr < (start_addr + logbuf.st_size)) {
+                    if(*(char *)logaddr == '\n') {
+                        memcpy(&temp, logaddr, sizeof(log_data));
+                        skip_size = sizeof(log_data) + temp.mod_size;
+                        valid_ptr = logaddr + skip_size;
+
+                        printf("Valid_ptr value :%c\n", *(char *)valid_ptr);
+
+                        if(*(char *)valid_ptr != '1') {
+
+                            //// Move till you find \n
+                            count = 1;
+
+                            while(*(char *)(++logaddr) != '\n' && logaddr < start_addr + logbuf.st_size) {
+                                count++;
+                            }
+
+                            printf("Count value: %d\n", count);
+
+                            //// \n found. Begin purging
+                            if(*(char *)(logaddr) == '\n') {
+                                printf("NEED TO PURGE\n");
+//                                printf("Current address %p, Real End Address %p\n", logaddr, logend);
+//                                printf("Value at End Value %c\n", *(char *)(logend - 1));
+//                                printf("Added address %p\n", logaddr + (logbuf.st_size - count));
+//                                printf("To be copied: %d bytes\n", logbuf.st_size - count);
+//                                printf("Temp_Store Address: %p\n", temp_store);
+
+                                temp_store = malloc((size_t)(logbuf.st_size - count));
+                                printf("Temp_Store Address: %p\n", temp_store);
+                                memcpy(temp_store, logaddr, (size_t)(logbuf.st_size - count));
+                                ghost_fd = open(p_filepath, O_CREAT | O_RDWR, S_IRWXU);
+                                ghost_addr = mmap(NULL, logbuf.st_size - count, PROT_READ | PROT_WRITE, MAP_SHARED, ghost_fd, 0);
+                                write(ghost_fd, temp_store, logbuf.st_size - count);
+                                free(temp_store);
+                                close(logfd);
+                                close(ghost_fd);
+                                remove(l_filepath);
+                                rename(p_filepath, l_filepath);
+                                remove(p_filepath);
+                                logfd = open(l_filepath, O_RDWR, S_IRWXU);
+                                fstat(logfd, &logbuf);
+                                logaddr = mmap(NULL, logbuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, ghost_fd, 0);
+                            }
+
+                            else if(logaddr >= start_addr + logbuf.st_size) {
+                                ///// BOMB THE FILE
+                                remove(l_filepath);
+                            }
+                        }
+                        else {
+                            // Write to data store and purge previous
+                        }
+//                        break; ////////////////// REMOVE THIS BREAK /////////////////////////////
+                    }
+                    logaddr++;
+                    fstat(logfd, &logbuf);
+                }
+
+                //// Should be spliced up
                 memcpy(&temp, logaddr, sizeof(log_data));
-                void *runner = logaddr, *payload;
+                runner = logaddr;
                 printf("Runner start: %p logaddr start: %p temp addr: %p\n", runner, logaddr, &temp);
                 runner += sizeof(log_data);
                 printf("Runner end: %p\n", runner);
                 printf("Logs data size: %d\n", sizeof(log_data));
                 payload = (char *)malloc(temp.mod_size);
                 memcpy(payload, runner, temp.mod_size);
+
+
+                // Writing to datafile
                 lseek(datafd, temp.offset, SEEK_SET);
                 write(datafd, payload, temp.mod_size);
 
 
-                //TESTING
-                int newfd = open("newfile", O_CREAT | O_RDWR, S_IRWXU);
-                void *newaddr;
-
-                if((newaddr = mmap(NULL, logbuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, newfd, 0)) < 0) {
-                        fprintf(stdout, "Unable to map virtual memory to disk");
-                }
-                printf("TEMP MODSIZE: %d\n", temp.mod_size);
-                write(newfd, payload, temp.mod_size);
-                //TESTING
+//                //TESTING
+//                int newfd = open("newfile", O_CREAT | O_RDWR, S_IRWXU);
+//                void *newaddr;
+//
+//                if((newaddr = mmap(NULL, logbuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, newfd, 0)) < 0) {
+//                        fprintf(stdout, "Unable to map virtual memory to disk");
+//                }
+//                printf("TEMP MODSIZE: %d\n", temp.mod_size);
+//                write(newfd, payload, temp.mod_size);
+//                //TESTING
 
             }
 

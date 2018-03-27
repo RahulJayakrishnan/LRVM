@@ -28,6 +28,7 @@ typedef struct local_store {
 } in_mem;
 
 typedef struct log_data {
+    char flag;
     int tid;
     int can_truncate;
     int offset;
