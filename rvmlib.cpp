@@ -384,7 +384,62 @@ void rvm_truncate_log(rvm_t rvm) {
 //                                printf("Temp_Store Address: %p\n", temp_store);
 
                                 temp_store = malloc((size_t)(logbuf.st_size - count));
-                                printf("Temp_Store Address: %p\n", temp_store);
+//                                printf("Temp_Store Address: %p\n", temp_store);
+                                memcpy(temp_store, logaddr, (size_t)(logbuf.st_size - count));
+                                ghost_fd = open(p_filepath, O_CREAT | O_RDWR, S_IRWXU);
+                                ghost_addr = mmap(NULL, logbuf.st_size - count, PROT_READ | PROT_WRITE, MAP_SHARED, ghost_fd, 0);
+                                write(ghost_fd, temp_store, logbuf.st_size - count);
+                                free(temp_store);
+                                close(logfd);
+                                close(ghost_fd);
+                                remove(l_filepath);
+                                rename(p_filepath, l_filepath);
+//                              remove(p_filepath);
+                                logfd = open(l_filepath, O_RDWR, S_IRWXU);
+                                fstat(logfd, &logbuf);
+                                logaddr = mmap(NULL, logbuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, logfd, 0);
+                                start_addr = logaddr;
+                            }
+
+                            else if(logaddr >= start_addr + logbuf.st_size) {
+                                ///// DELETE THE FILE
+                                remove(l_filepath);
+                            }
+                        }
+                        else {
+                            // Write to data store and purge previous
+                            memcpy(&temp, logaddr, sizeof(log_data));
+                            runner = logaddr;
+                            runner += sizeof(log_data);
+                            payload = (char *)malloc(temp.mod_size);
+                            memcpy(payload, runner, temp.mod_size);
+
+
+                            // Writing to datafile
+                            lseek(datafd, temp.offset, SEEK_SET);
+                            write(datafd, payload, temp.mod_size);
+
+                            // Purging logfile
+
+                            count = 1;
+
+                            while(*(char *)(++logaddr) != '\n' && logaddr < start_addr + logbuf.st_size) {
+                                count++;
+                            }
+
+                            printf("Count value: %d\n", count);
+
+                            //// \n found. Begin purging
+//                            if(*(char *)(logaddr) == '\n') {
+                                printf("NEED TO PURGE\n");
+//                                printf("Current address %p, Real End Address %p\n", logaddr, logend);
+//                                printf("Value at End Value %c\n", *(char *)(logend - 1));
+//                                printf("Added address %p\n", logaddr + (logbuf.st_size - count));
+//                                printf("To be copied: %d bytes\n", logbuf.st_size - count);
+//                                printf("Temp_Store Address: %p\n", temp_store);
+
+                                temp_store = malloc((size_t)(logbuf.st_size - count));
+//                                printf("Temp_Store Address: %p\n", temp_store);
                                 memcpy(temp_store, logaddr, (size_t)(logbuf.st_size - count));
                                 ghost_fd = open(p_filepath, O_CREAT | O_RDWR, S_IRWXU);
                                 ghost_addr = mmap(NULL, logbuf.st_size - count, PROT_READ | PROT_WRITE, MAP_SHARED, ghost_fd, 0);
@@ -397,37 +452,30 @@ void rvm_truncate_log(rvm_t rvm) {
                                 remove(p_filepath);
                                 logfd = open(l_filepath, O_RDWR, S_IRWXU);
                                 fstat(logfd, &logbuf);
-                                logaddr = mmap(NULL, logbuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, ghost_fd, 0);
-                            }
-
-                            else if(logaddr >= start_addr + logbuf.st_size) {
-                                ///// BOMB THE FILE
-                                remove(l_filepath);
-                            }
-                        }
-                        else {
-                            // Write to data store and purge previous
+                                logaddr = mmap(NULL, logbuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, logfd, 0);
+                                start_addr = logaddr;
+                            //}
                         }
 //                        break; ////////////////// REMOVE THIS BREAK /////////////////////////////
                     }
-                    logaddr++;
+//                    logaddr++;
                     fstat(logfd, &logbuf);
                 }
 
                 //// Should be spliced up
-                memcpy(&temp, logaddr, sizeof(log_data));
-                runner = logaddr;
-                printf("Runner start: %p logaddr start: %p temp addr: %p\n", runner, logaddr, &temp);
-                runner += sizeof(log_data);
-                printf("Runner end: %p\n", runner);
-                printf("Logs data size: %d\n", sizeof(log_data));
-                payload = (char *)malloc(temp.mod_size);
-                memcpy(payload, runner, temp.mod_size);
-
-
-                // Writing to datafile
-                lseek(datafd, temp.offset, SEEK_SET);
-                write(datafd, payload, temp.mod_size);
+//                memcpy(&temp, logaddr, sizeof(log_data));
+//                runner = logaddr;
+//                printf("Runner start: %p logaddr start: %p temp addr: %p\n", runner, logaddr, &temp);
+//                runner += sizeof(log_data);
+//                printf("Runner end: %p\n", runner);
+//                printf("Logs data size: %d\n", sizeof(log_data));
+//                payload = (char *)malloc(temp.mod_size);
+//                memcpy(payload, runner, temp.mod_size);
+//
+//
+//                // Writing to datafile
+//                lseek(datafd, temp.offset, SEEK_SET);
+//                write(datafd, payload, temp.mod_size);
 
 
 //                //TESTING

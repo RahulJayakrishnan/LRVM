@@ -52,15 +52,16 @@ int main() {
     }
 
     txn_id = rvm_begin_trans(rvm, 1, (void **)&addr);
-//    rvm_about_to_modify(txn_id, addr, 0, sizeof(student));
-    rvm_about_to_modify(txn_id, addr, 1, sizeof(student) - 1);
-    addr->name[0] = 'H';
+    rvm_about_to_modify(txn_id, addr, 0, sizeof(student));
+//    rvm_about_to_modify(txn_id, addr, 1, sizeof(student) - 1);
+    addr->name[0] = 'D';
     printf("Altered string: %s\n", addr->name);
     rvm_commit_trans(txn_id);
 //    rvm_abort_trans(txn_id);
 
 //    rvm_destroy(rvm, "studentid");
     rvm_truncate_log(rvm);
+
 
 
 
