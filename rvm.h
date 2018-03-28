@@ -18,6 +18,7 @@ typedef struct rvm_t {
 typedef struct local_store {
     int tid;
     void *segdata;
+    void *original;
     int segsize;
     const char *segname;
     bool being_modified;

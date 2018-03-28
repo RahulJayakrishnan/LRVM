@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/Project3.dir/main.cpp.o"
-  "CMakeFiles/Project3.dir/rvmlib.cpp.o"
+  "CMakeFiles/Project3.dir/rvm.cpp.o"
   "Project3.pdb"
   "Project3"
 )

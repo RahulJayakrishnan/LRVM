@@ -87,10 +87,10 @@
 		<Unit filename="/home/rahul/CLionProjects/Project3/main.cpp">
 			<Option target="Project3"/>
 		</Unit>
-		<Unit filename="/home/rahul/CLionProjects/Project3/rvmlib.cpp">
+		<Unit filename="/home/rahul/CLionProjects/Project3/rvm.cpp">
 			<Option target="Project3"/>
 		</Unit>
-		<Unit filename="/home/rahul/CLionProjects/Project3/rvmlib.h">
+		<Unit filename="/home/rahul/CLionProjects/Project3/rvm.h">
 			<Option target="Project3"/>
 		</Unit>
 		<Unit filename="/home/rahul/CLionProjects/Project3/CMakeLists.txt">

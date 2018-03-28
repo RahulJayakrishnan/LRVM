@@ -150,32 +150,32 @@ main.cpp.s:
 	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/main.cpp.s
 .PHONY : main.cpp.s
 
-rvmlib.o: rvmlib.cpp.o
+rvm.o: rvm.cpp.o
 
-.PHONY : rvmlib.o
+.PHONY : rvm.o
 
 # target to build an object file
-rvmlib.cpp.o:
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/rvmlib.cpp.o
-.PHONY : rvmlib.cpp.o
+rvm.cpp.o:
+	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/rvm.cpp.o
+.PHONY : rvm.cpp.o
 
-rvmlib.i: rvmlib.cpp.i
+rvm.i: rvm.cpp.i
 
-.PHONY : rvmlib.i
+.PHONY : rvm.i
 
 # target to preprocess a source file
-rvmlib.cpp.i:
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/rvmlib.cpp.i
-.PHONY : rvmlib.cpp.i
+rvm.cpp.i:
+	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/rvm.cpp.i
+.PHONY : rvm.cpp.i
 
-rvmlib.s: rvmlib.cpp.s
+rvm.s: rvm.cpp.s
 
-.PHONY : rvmlib.s
+.PHONY : rvm.s
 
 # target to generate assembly for a file
-rvmlib.cpp.s:
-	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/rvmlib.cpp.s
-.PHONY : rvmlib.cpp.s
+rvm.cpp.s:
+	$(MAKE) -f CMakeFiles/Project3.dir/build.make CMakeFiles/Project3.dir/rvm.cpp.s
+.PHONY : rvm.cpp.s
 
 # Help Target
 help:
@@ -189,9 +189,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
-	@echo "... rvmlib.o"
-	@echo "... rvmlib.i"
-	@echo "... rvmlib.s"
+	@echo "... rvm.o"
+	@echo "... rvm.i"
+	@echo "... rvm.s"
 .PHONY : help
 
 
