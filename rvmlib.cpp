@@ -89,7 +89,7 @@ void *rvm_map(rvm_t rvm, const char *segname, int size_to_create) {
 
     logfd = open(l_filepath, O_CREAT | O_RDWR, S_IRWXU);
     datafd = open(d_filepath, O_CREAT | O_RDWR, S_IRWXU);
-
+    rvm_truncate_log(rvm);
     vector <in_mem>::iterator it;
     if(localstore.size()) {
         for(it = localstore.begin(); it != localstore.end(); it++) {
@@ -199,13 +199,12 @@ trans_t rvm_begin_trans(rvm_t rvm, int numsegs, void **segbases) {
             vector <in_mem>::iterator iter;
             for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
                 if(iter->tid == tid) {
-                    ++iter->tid;
-                    printf("TID : %d\n", iter->tid);
+//                    ++iter->tid;
+
                 }
             }
         }
         ++tid;
-        printf("TID : %d\n", tid);
         return tid;
     }
 }
@@ -218,13 +217,14 @@ void rvm_about_to_modify(trans_t t_id, void *segbase, int offset, int size) {
     vector <in_mem>::iterator iter;
     for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
         if(iter->segdata == segbase) {
-            if(iter->being_modified || iter->tid != t_id) {
+            if(iter->being_modified) {
+                //  || iter->tid != t_id
                 return;
             }
             else {
-                iter->being_modified = true;
-                iter->offset = offset;
-                iter->mod_size = size;
+//                iter->being_modified = true;
+//                iter->offset = offset;
+//                iter->mod_size = size;
                 in_mem temp;
                 temp.tid = t_id;
                 temp.being_modified = false;
@@ -235,6 +235,17 @@ void rvm_about_to_modify(trans_t t_id, void *segbase, int offset, int size) {
                 temp.offset = iter->offset;
                 memcpy(temp.segdata, iter->segdata, temp.segsize);
                 undo.push_back(temp);
+
+                iter->being_modified = true;
+                temp.mod_size = size;
+                temp.offset = offset;
+                temp.tid = t_id;
+                strcpy(temp.d_filepath, iter->d_filepath);
+                strcpy(temp.l_filepath, iter->l_filepath);
+                temp.segname = iter->segname;
+                temp.segdata = iter->segdata;
+                temp.segsize = iter->segsize;
+                localstore.push_back(temp);
                 break;
             }
         }
@@ -360,8 +371,6 @@ void rvm_truncate_log(rvm_t rvm) {
                         memcpy(&temp, logaddr, sizeof(log_data));
                         skip_size = sizeof(log_data) + temp.mod_size;
                         valid_ptr = logaddr + skip_size;
-
-                        printf("Valid_ptr value :%c\n", *(char *)valid_ptr);
 
                         if(*(char *)valid_ptr != '1') {
 
