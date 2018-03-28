@@ -217,11 +217,9 @@ void rvm_about_to_modify(trans_t t_id, void *segbase, int offset, int size) {
     vector <in_mem>::iterator iter;
     for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
         if(iter->segdata == segbase) {
-            if(iter->being_modified) {
-                //  || iter->tid != t_id
-                return;
-            }
-            else {
+            printf("*\n");
+
+
 //                iter->being_modified = true;
 //                iter->offset = offset;
 //                iter->mod_size = size;
@@ -247,7 +245,7 @@ void rvm_about_to_modify(trans_t t_id, void *segbase, int offset, int size) {
                 temp.segsize = iter->segsize;
                 localstore.push_back(temp);
                 break;
-            }
+
         }
     }
 

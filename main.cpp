@@ -100,9 +100,6 @@ void proc1()
 
     rvm_about_to_modify(trans, segs[0], 0, 100);
     sprintf(segs[0], TEST_STRING);
-    rvm_commit_trans(trans);
-
-    trans = rvm_begin_trans(rvm, 1, (void **) segs);
     rvm_about_to_modify(trans, segs[0], OFFSET2, 100);
     sprintf(segs[0]+OFFSET2, TEST_STRING);
 
@@ -151,7 +148,7 @@ int main(int argc, char **argv)
 
     waitpid(pid, NULL, 0);
 
-//    proc2();
+   proc2();
 
     return 0;
 }

@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/hrjanardhan/Desktop/git_AOS/Project3/main.cpp
+/home/rahul/CLionProjects/Project3/main.cpp
 rvmlib.h
-/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.h
+/home/rahul/CLionProjects/Project3/rvmlib.h
 unistd.h
 -
 stdio.h
@@ -20,7 +20,7 @@ string.h
 sys/wait.h
 -
 
-/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.cpp
+/home/rahul/CLionProjects/Project3/rvmlib.cpp
 stdlib.h
 -
 stdio.h
@@ -42,7 +42,7 @@ errno.h
 sys/file.h
 -
 rvmlib.h
-/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.h
+/home/rahul/CLionProjects/Project3/rvmlib.h
 string.h
 -
 string
@@ -58,5 +58,5 @@ dirent.h
 iostream
 -
 
-/home/hrjanardhan/Desktop/git_AOS/Project3/rvmlib.h
+/home/rahul/CLionProjects/Project3/rvmlib.h
 

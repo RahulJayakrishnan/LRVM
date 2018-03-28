@@ -1,1 +1,0 @@
-/usr/bin/c++  -g   CMakeFiles/Project3CPP.dir/main.cpp.o CMakeFiles/Project3CPP.dir/rvmlib.cpp.o  -o Project3CPP 
