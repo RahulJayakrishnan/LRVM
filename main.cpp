@@ -1,5 +1,5 @@
-/* Test rvm_truncate_log() correctly removes log and applies
-changes to segments. */
+/* abort.c - test that aborting a modification returns the segment to
+ * its initial state */
 
 #include "rvm.h"
 #include <unistd.h>
@@ -16,39 +16,52 @@ int main(int argc, char **argv)
 {
     rvm_t rvm;
     char *seg;
-    void *segs[1];
+    char *segs[1];
     trans_t trans;
 
-    // rvm = rvm_init(__FILE__ ".d");
     rvm = rvm_init("rvm_segments");
 
     rvm_destroy(rvm, "testseg");
 
     segs[0] = (char *) rvm_map(rvm, "testseg", 10000);
-    seg = (char *) segs[0];
+    seg = segs[0];
 
-    trans = rvm_begin_trans(rvm, 1, segs);
+    /* write some data and commit it */
+    trans = rvm_begin_trans(rvm, 1, (void**) segs);
     rvm_about_to_modify(trans, seg, 0, 100);
     sprintf(seg, TEST_STRING1);
 
     rvm_about_to_modify(trans, seg, OFFSET2, 100);
-    sprintf(seg+OFFSET2, TEST_STRING2);
+    sprintf(seg+OFFSET2, TEST_STRING1);
 
     rvm_commit_trans(trans);
 
+    /* start writing some different data, but abort */
+    trans = rvm_begin_trans(rvm, 1, (void**) segs);
+    rvm_about_to_modify(trans, seg, 0, 100);
+    sprintf(seg, TEST_STRING2);
 
-    printf("Before Truncation:\n");
-    // system("ls -l " __FILE__ ".d");
-    system("ls -l rvm_segments");
+    rvm_about_to_modify(trans, seg, OFFSET2, 100);
+    sprintf(seg+OFFSET2, TEST_STRING2);
 
-    printf("\n\n");
+    rvm_abort_trans(trans);
 
-    rvm_truncate_log(rvm);
 
-    printf("\nAfter Truncation:\n");
-    // system("ls -l " __FILE__ ".d");
-    system("ls -l rvm_segments");
+    /* test that the data was restored */
+    if(strcmp(seg+OFFSET2, TEST_STRING1)) {
+        printf("ERROR: second hello is incorrect (%s)\n",
+               seg+OFFSET2);
+        exit(2);
+    }
+
+    if(strcmp(seg, TEST_STRING1)) {
+        printf("ERROR: first hello is incorrect (%s)\n",
+               seg);
+        exit(2);
+    }
+
 
     rvm_unmap(rvm, seg);
+    printf("OK\n");
     exit(0);
 }
