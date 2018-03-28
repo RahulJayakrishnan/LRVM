@@ -116,7 +116,18 @@ void *rvm_map(rvm_t rvm, const char *segname, int size_to_create) {
         fprintf(stdout, "Unable to map virtual memory to disk");
     }
 
-    in_mem disk_read = {-1, NULL,NULL, size_to_create, segname};
+    in_mem disk_read;
+// = {-1, NULL, NULL, size_to_create, segname};
+
+    disk_read.tid = -1;
+    disk_read.segdata = NULL;
+    disk_read.original = NULL;
+    disk_read.segsize = size_to_create;
+    disk_read.segname = segname;
+    disk_read.being_modified = false;
+    disk_read.offset = 0;
+    disk_read.mod_size = 0;
+
     fstat(datafd, &buf);
     if(buf.st_size >= size_to_create) {
         disk_read.segdata = malloc(size_to_create);
@@ -266,7 +277,7 @@ void rvm_commit_trans(trans_t tid) {
             strcpy(ldata.d_filepath, iter->d_filepath);
             ldata.mod_size = iter->mod_size;
             ldata.offset = iter->offset;
-            ldata.flag = '\n';
+            ldata.flag = '\t';
 
             // open, mmap, append, seek, close
             int fd = open(iter->l_filepath, O_CREAT | O_RDWR, S_IRWXU);
@@ -374,7 +385,7 @@ void rvm_truncate_log(rvm_t rvm) {
                 printf("Size of file: %d\n", logbuf.st_size);
                 void *start_addr = logaddr;
                 while(logbuf.st_size && logaddr < (start_addr + logbuf.st_size)) {
-                    if(*(char *)logaddr == '\n') {
+                    if(*(char *)logaddr == '\t') {
                         memcpy(&temp, logaddr, sizeof(log_data));
                         skip_size = sizeof(log_data) + temp.mod_size;
                         valid_ptr = logaddr + skip_size;
@@ -384,14 +395,14 @@ void rvm_truncate_log(rvm_t rvm) {
                             //// Move till you find \n
                             count = 1;
 
-                            while(*(char *)(++logaddr) != '\n' && logaddr < start_addr + logbuf.st_size) {
+                            while(*(char *)(++logaddr) != '\t' && logaddr < start_addr + logbuf.st_size) {
                                 count++;
                             }
 
                             printf("Count value: %d\n", count);
 
                             //// \n found. Begin purging
-                            if(*(char *)(logaddr) == '\n') {
+                            if(*(char *)(logaddr) == '\t') {
                                 printf("NEED TO PURGE\n");
 //                                printf("Current address %p, Real End Address %p\n", logaddr, logend);
 //                                printf("Value at End Value %c\n", *(char *)(logend - 1));
@@ -439,7 +450,7 @@ void rvm_truncate_log(rvm_t rvm) {
 
                             count = 1;
 
-                            while(*(char *)(++logaddr) != '\n' && logaddr < start_addr + logbuf.st_size) {
+                            while(*(char *)(++logaddr) != '\t' && logaddr < start_addr + logbuf.st_size) {
                                 count++;
                             }
 
