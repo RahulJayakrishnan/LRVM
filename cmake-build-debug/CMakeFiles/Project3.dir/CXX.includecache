@@ -17,8 +17,6 @@ stdlib.h
 -
 string.h
 -
-sys/wait.h
--
 
 /home/hrjanardhan/Desktop/git_AOS/Project3/rvm.cpp
 stdlib.h

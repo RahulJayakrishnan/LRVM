@@ -98,6 +98,10 @@ void *rvm_map(rvm_t rvm, const char *segname, int size_to_create) {
                     printf("rvm_map - Segment already mapped\n");
                 return NULL;
             }
+//            printf("Begin: %p Cur: %p End: %p\n", localstore.begin(), it, localstore.end());
+//            printf("Sizeof: %d\n", sizeof(localstore));
+            printf("Mapping doesn't exist\n");
+            truncate(d_filepath, size_to_create);
         }
     }
     else {
@@ -140,7 +144,6 @@ void *rvm_map(rvm_t rvm, const char *segname, int size_to_create) {
     }
     else {
         printf("Trying to read more data than filesize\n");
-
     }
 
     return NULL;
@@ -268,10 +271,11 @@ void rvm_commit_trans(trans_t tid) {
         printf("rvm_commit_trans failed. Invalid tid");
         return;
     }
-    log_data ldata;
+
     vector <in_mem>::iterator iter;
     for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
         if(iter->tid == tid) {
+            log_data ldata;
             iter->being_modified = false;
             ldata.tid = tid;
             strcpy(ldata.d_filepath, iter->d_filepath);
@@ -342,6 +346,19 @@ void rvm_truncate_log(rvm_t rvm) {
     strncpy(p_filepath, rvm.directory, 40);
 
     while((dir = readdir(dr)) != NULL) {
+        for(int jj = 0; jj < 40; ++jj) {
+            l_dest[jj] = '\0';
+            d_dest[jj] = '\0';
+            l_filepath[jj] = '\0';
+            d_filepath[jj] = '\0';
+            p_filepath[jj] = '\0';
+        }
+        strncpy(l_filepath, rvm.directory, 40);
+        strncpy(d_filepath, rvm.directory, 40);
+        strncpy(p_filepath, rvm.directory, 40);
+        strncpy(l_dest, "/log", 4);
+        strncpy(d_dest, "/data", 5);
+
         string dir_name = dir->d_name;
         string log_str = "log";
         string str_segname;
@@ -362,6 +379,8 @@ void rvm_truncate_log(rvm_t rvm) {
 
             int logfd = open(l_filepath, O_RDWR, S_IRWXU), count = 0, skip_size = 0;
             int datafd = open(d_filepath, O_RDWR, S_IRWXU), ghost_fd;
+
+            if(logfd < 0 || datafd < 0) return;
 
             fstat(logfd, &logbuf);
             fstat(datafd, &databuf);

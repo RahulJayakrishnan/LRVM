@@ -1,82 +1,54 @@
-/* basic.c - test that basic persistency works */
+/* Test rvm_truncate_log() correctly removes log and applies
+changes to segments. */
 
 #include "rvm.h"
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/wait.h>
 
-#define TEST_STRING "hello, world"
-#define OFFSET2 100
-
-
-/* proc1 writes some data, commits it, then exits */
-void proc1()
-{
-    rvm_t rvm;
-    trans_t trans;
-    char* segs[1];
-
-    rvm = rvm_init("rvm_segments");
-    rvm_destroy(rvm, "testseg");
-    segs[0] = (char *) rvm_map(rvm, "testseg", 10000);
-
-
-    trans = rvm_begin_trans(rvm, 1, (void **) segs);
-
-    rvm_about_to_modify(trans, segs[0], 0, 100);
-    sprintf(segs[0], TEST_STRING);
-
-    rvm_about_to_modify(trans, segs[0], OFFSET2, 100);
-    sprintf(segs[0]+OFFSET2, TEST_STRING);
-
-    rvm_commit_trans(trans);
-
-    abort();
-}
-
-
-/* proc2 opens the segments and reads from them */
-void proc2()
-{
-    char* segs[1];
-    rvm_t rvm;
-
-    rvm = rvm_init("rvm_segments");
-
-    segs[0] = (char *) rvm_map(rvm, "testseg", 10000);
-    if(strcmp(segs[0], TEST_STRING)) {
-        printf("ERROR: first hello not present\n");
-        exit(2);
-    }
-    if(strcmp(segs[0]+OFFSET2, TEST_STRING)) {
-        printf("ERROR: second hello not present\n");
-        exit(2);
-    }
-
-    printf("OK\n");
-    exit(0);
-}
+#define TEST_STRING1 "hello, world"
+#define TEST_STRING2 "bleg!"
+#define OFFSET2 1000
 
 
 int main(int argc, char **argv)
 {
-    int pid;
+    rvm_t rvm;
+    char *seg;
+    void *segs[1];
+    trans_t trans;
 
-    pid = fork();
-    if(pid < 0) {
-        perror("fork");
-        exit(2);
-    }
-    if(pid == 0) {
-        proc1();
-        exit(0);
-    }
+    // rvm = rvm_init(__FILE__ ".d");
+    rvm = rvm_init("rvm_segments");
 
-    waitpid(pid, NULL, 0);
+    rvm_destroy(rvm, "testseg");
 
-    proc2();
+    segs[0] = (char *) rvm_map(rvm, "testseg", 10000);
+    seg = (char *) segs[0];
 
-    return 0;
+    trans = rvm_begin_trans(rvm, 1, segs);
+    rvm_about_to_modify(trans, seg, 0, 100);
+    sprintf(seg, TEST_STRING1);
+
+    rvm_about_to_modify(trans, seg, OFFSET2, 100);
+    sprintf(seg+OFFSET2, TEST_STRING2);
+
+    rvm_commit_trans(trans);
+
+
+    printf("Before Truncation:\n");
+    // system("ls -l " __FILE__ ".d");
+    system("ls -l rvm_segments");
+
+    printf("\n\n");
+
+    rvm_truncate_log(rvm);
+
+    printf("\nAfter Truncation:\n");
+    // system("ls -l " __FILE__ ".d");
+    system("ls -l rvm_segments");
+
+    rvm_unmap(rvm, seg);
+    exit(0);
 }
