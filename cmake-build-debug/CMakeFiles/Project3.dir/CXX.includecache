@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/hrjanardhan/Desktop/git_AOS/Project3/main.cpp
+/home/hrjanardhan/Desktop/git_AOS/Project3_EXP/main.cpp
 rvm.h
-/home/hrjanardhan/Desktop/git_AOS/Project3/rvm.h
+/home/hrjanardhan/Desktop/git_AOS/Project3_EXP/rvm.h
 unistd.h
 -
 stdio.h
@@ -17,13 +17,19 @@ stdlib.h
 -
 string.h
 -
+sys/wait.h
+-
+sys/types.h
+-
+sys/stat.h
+-
+fcntl.h
+-
 
-/home/hrjanardhan/Desktop/git_AOS/Project3/rvm.cpp
+/home/hrjanardhan/Desktop/git_AOS/Project3_EXP/rvm.cpp
 stdlib.h
 -
 stdio.h
--
-sys/types.h
 -
 sys/stat.h
 -
@@ -35,17 +41,9 @@ sys/mman.h
 -
 string.h
 -
-errno.h
--
-sys/file.h
--
 rvm.h
-/home/hrjanardhan/Desktop/git_AOS/Project3/rvm.h
-string.h
--
+/home/hrjanardhan/Desktop/git_AOS/Project3_EXP/rvm.h
 string
--
-iosfwd
 -
 vector
 -
@@ -56,5 +54,5 @@ dirent.h
 iostream
 -
 
-/home/hrjanardhan/Desktop/git_AOS/Project3/rvm.h
+/home/hrjanardhan/Desktop/git_AOS/Project3_EXP/rvm.h
 

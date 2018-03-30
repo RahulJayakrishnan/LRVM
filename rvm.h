@@ -30,7 +30,7 @@ typedef struct local_store {
 } in_mem;
 
 typedef struct log_data {
-    char flag;
+    char flag[10];
     int tid;
     int can_truncate;
     int offset;

@@ -43,10 +43,7 @@ typedef struct student {
 void proc1()
 {
     student rick = {12, "Sick"};
-
-
-    printf("MIDTERM MARKS: %d %d %d\n", rick.marks.AOS, rick.marks.APT, rick.marks.ACA);
-
+    rvm_verbose(1);
     rvm_t rvm;
     trans_t trans;
     student* segs[1];
@@ -118,15 +115,16 @@ void proc2()
     rvm = rvm_init("rvm_segments");
 
     segs[0] = (student *) rvm_map(rvm, "testseg", sizeof(student));
+    printf("************************************************\n");
     printf("Student ID: %d | Student Name: %s\n", segs[0]->id, segs[0]->name);
-    printf("AOS: %d\nAPT: %d\nACA: %d\n", segs[0]->marks.AOS, segs[0]->marks.APT, segs[0]->marks.ACA);
-    printf("Project 1: %d\nProject 2: %d\n", segs[0]->marks.Project.project1, segs[0]->marks.Project.project2);
+    printf("AOS: %d APT: %d ACA: %d\n", segs[0]->marks.AOS, segs[0]->marks.APT, segs[0]->marks.ACA);
+    printf("Project 1: %d Project 2: %d\n", segs[0]->marks.Project.project1, segs[0]->marks.Project.project2);
     if(strcmp(segs[0]->name, "Rick Morty")) {
-        printf("ERROR: first hello not present\n");
+        printf("ERROR: Name is incorrect\n");
         exit(2);
     }
     if(segs[0]->id != 123) {
-        printf("ERROR: second hello not present\n");
+        printf("ERROR: ID is incorrect\n");
         exit(2);
     }
 
