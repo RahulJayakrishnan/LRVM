@@ -1,0 +1,41 @@
+1. Run 
+	> make clean
+	> make
+
+2. To run specific testcases, run 
+	
+	> make <testcase_name>
+
+
+<testcase_name> values:
+- basic
+	Two separate processes commit two transactions and call
+abort and exit.
+
+- abort
+	A commit is aborted and the result is checked to make
+sure that the previous value is intact.
+
+- multi
+	Complete a transaction in one process and check that the
+transaction completed correctly in another process.
+
+- multiabort
+	Show that transactions can be completed in two
+separate segments.
+
+- truncate
+	 Truncate log
+
+- music
+	Commit transaction on a music file.
+	
+- uncommitted
+	Show uncommitted transactions are not persisted.	
+	
+- tree
+	Show transactions on 3 level deep structure.
+	
+Other Information:
+If an error "ISO c++ forbids incrementing a pointer of type"is encountered during "make", 
+change all instances of "++logaddr" to "(logaddr = (char *)(logaddr + 1))" in rvm.cpp
