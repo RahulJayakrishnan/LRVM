@@ -24,6 +24,7 @@ using namespace std;
 int verbose;
 vector <in_mem> localstore, undo;
 trans_t tid = -1;
+int Maxsegnum=0;
 
 rvm_t rvm_init(const char *directory) {
     rvm_t myData;
@@ -153,7 +154,7 @@ void rvm_unmap(rvm_t rvm, void *segbase) {
     vector <in_mem>::iterator iter;
     printf("Begin: %p End: %p\n", localstore.begin(), localstore.end());
     for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
-        if(segbase == iter->segdata) {
+        if(segbase == iter->segdata && !iter->invalid) {
             if(verbose) {
             printf("rvm_unmap - Unmapped: %p\n", segbase);
             }
@@ -196,7 +197,7 @@ trans_t rvm_begin_trans(rvm_t rvm, int numsegs, void **segbases) {
     for(int i = 0; i < numsegs; ++i) {
         vector <in_mem>::iterator iter;
         for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
-            if(iter->segdata == segbases[i]) {
+            if(iter->segdata == segbases[i] && !iter->invalid) {
                 if(iter->being_modified) {
                     printf("rvm_begin_trans failed. One or more segments are being modified\n");
                     return -1;
@@ -211,6 +212,7 @@ trans_t rvm_begin_trans(rvm_t rvm, int numsegs, void **segbases) {
     } else {
         for(int i = 0; i < numsegs; ++i) {
             vector <in_mem>::iterator iter;
+            Maxsegnum=numsegs;
             for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
                 if(iter->tid == tid) {
 //                    ++iter->tid;
@@ -229,8 +231,9 @@ void rvm_about_to_modify(trans_t t_id, void *segbase, int offset, int size) {
         return;
     }
     vector <in_mem>::iterator iter;
+    vector <in_mem>::iterator it;
     for(iter = localstore.begin(); iter <= localstore.end(); iter++) {
-        if(iter->segdata == segbase) {
+        if(iter->segdata == segbase && !iter->invalid) {
             printf("*\n");
 
 
@@ -247,6 +250,8 @@ void rvm_about_to_modify(trans_t t_id, void *segbase, int offset, int size) {
                 temp.mod_size = iter->mod_size;
                 temp.offset = iter->offset;
                 memcpy(temp.segdata, iter->segdata, temp.segsize);
+
+
                 undo.push_back(temp);
 
                 iter->being_modified = true;
@@ -300,7 +305,7 @@ void rvm_commit_trans(trans_t tid) {
             iter->being_modified=false;
         }
         else if(iter->tid==tid)
-            iter->segdata=NULL;
+            iter->invalid=true;
     }
 
 }
@@ -311,17 +316,19 @@ void rvm_abort_trans(trans_t tid) {
         return;
     }
     vector <in_mem>::iterator iter;
-    for(iter = localstore.begin(); iter < localstore.end(); iter++) {
-        if(iter->tid == -1) {
-            localstore.erase(iter);
-        }
-    }
-
-    for(iter = undo.begin(); iter <= undo.end(); iter++) {
+//    for(iter = localstore.begin(); iter < localstore.end(); iter++) {
+//        if(iter->tid == -1) {
+//            localstore.erase(iter);
+//        }
+//    }
+    const char* segn;
+    for(iter = undo.begin(); iter <= undo.end();iter++) {
         if(iter->tid == tid) {
 
            memcpy(iter->original,iter->segdata,iter->segsize);
-            break;// Memleak might be there if about_to_modify is called multiple times for the same segment
+           --Maxsegnum;
+            if(Maxsegnum==0)
+                break;
         }
     }
     if(verbose) {
