@@ -1,5 +1,7 @@
 # LIgtweight Recoverable Virtual Memory
 ##C++ Implementation of a simple LRVM client end library
+
+
 we have implemented a recoverable virtual memory system like LRVM as
 described in Lightweight Recoverable Virtual Memory Paper. Users of the library can create
 persistent segments of memory and then access them in a sequence of transactions. Making
@@ -46,9 +48,9 @@ separate segments.
 	Show transactions on 3 level deep structure.
   
   
-  API Implementation:
+ ## API Implementation:
   
-Initialization & Mapping APIs:
+###Initialization & Mapping APIs:
 
 `rvm_t rvm_init(const char *directory)`
 Initialize the library with the specified directory as backing store.
@@ -79,7 +81,7 @@ void rvm_destroy(rvm_t rvm, const char *segname)
 Destroys a segment completely, erasing its backing store. Returns error if a mapped
 segment is attempted to be destroyed.
 
-Transactional Operations
+###Transactional Operations
 
 `trans_t rvm_begin_trans(rvm_t rvm, int numsegs, void **segbases)`
 
@@ -89,7 +91,9 @@ if all the segbases specified are mapped by cycling through the local_store vect
 searching for all segbases passed as the argument. It then generates a transaction number
 by incrementing a library local counter. If any of the specified segments is not mapped or is
 already being modified by a transaction, then the call should fail and return (trans_t) -1.
-void rvm_about_to_modify(trans_t tid, void *segbase, int offset, int size)
+
+`void rvm_about_to_modify(trans_t tid, void *segbase, int offset, int size)`
+
 Declare that the library is about to modify a specified range of memory in the specified
 segment. The segment must be one of the segments specified in the call to
 rvm_begin_trans. The library ensures that the old memory and its metadata has been savedinto a separate vector called ​ undo​ , in case an abort is executed. rvm_about_to_modify can
@@ -118,7 +122,8 @@ undo all changes that have happened within the specified transaction. ​ undo v
 traversed to find the first instance of ​ tid ​ for a particular segment and the data in the vector
 is patched back into the local copy. Following this the flag that marks the segment as about
 to be modified is set to false in the local_store.
-Log Control Operations
+
+###Log Control Operations
 
 `void rvm_truncate_log(rvm_t rvm)`
 
