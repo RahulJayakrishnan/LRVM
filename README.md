@@ -135,3 +135,5 @@ log data into the persistent data file after the validity of the log entry is ch
 byte=’1’). The log file of each segment is processed line by line, so crashes during the
 truncation will not produce any undesirable effects as the log record is only removed from
 the log file when its corresponding changes have already been applied to disk.
+
+
