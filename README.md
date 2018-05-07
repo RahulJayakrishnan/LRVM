@@ -1,5 +1,5 @@
-# LIgtweight Recoverable Virtual Memory
-##C++ Implementation of a simple LRVM client end library
+# Ligtweight Recoverable Virtual Memory
+## C++ Implementation of a simple LRVM client end library
 
 
 we have implemented a recoverable virtual memory system like LRVM as
@@ -50,7 +50,7 @@ separate segments.
   
  ## API Implementation:
   
-###Initialization & Mapping APIs:
+### Initialization & Mapping APIs:
 
 `rvm_t rvm_init(const char *directory)`
 Initialize the library with the specified directory as backing store.
@@ -81,7 +81,7 @@ void rvm_destroy(rvm_t rvm, const char *segname)
 Destroys a segment completely, erasing its backing store. Returns error if a mapped
 segment is attempted to be destroyed.
 
-###Transactional Operations
+### Transactional Operations
 
 `trans_t rvm_begin_trans(rvm_t rvm, int numsegs, void **segbases)`
 
@@ -123,7 +123,7 @@ traversed to find the first instance of ​ tid ​ for a particular segment and
 is patched back into the local copy. Following this the flag that marks the segment as about
 to be modified is set to false in the local_store.
 
-###Log Control Operations
+### Log Control Operations
 
 `void rvm_truncate_log(rvm_t rvm)`
 
