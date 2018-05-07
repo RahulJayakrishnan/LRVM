@@ -1,7 +1,7 @@
 # Ligtweight Recoverable Virtual Memory
 ## C++ Implementation of a simple LRVM client end library
 
-
+### Collaborators: -Rahul Jayakrishnan -Janardhan Hariyadi Ramesh
 we have implemented a recoverable virtual memory system like LRVM as
 described in Lightweight Recoverable Virtual Memory Paper. Users of the library can create
 persistent segments of memory and then access them in a sequence of transactions. Making
